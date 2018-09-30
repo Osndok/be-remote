@@ -1,0 +1,15 @@
+{
+    "name": "be-remote.reh",
+    "description": "Remotely effect black-ember",
+    "architecture": "armhf",
+    "title": "BE Remote",
+    "hooks": {
+        "be-remote": {
+            "apparmor": "be-remote.apparmor",
+            "desktop":  "be-remote.desktop"
+        }
+    },
+    "version": "1.0.0",
+    "maintainer": "Robert Hailey <ubports@osndok.com>",
+    "framework" : "ubuntu-sdk-15.04.5"
+}

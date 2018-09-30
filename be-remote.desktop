@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=BE Remote
+Exec=be-remote
+Icon=assets/logo.svg
+Terminal=false
+Type=Application
+X-Ubuntu-Touch=true
