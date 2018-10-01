@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"strconv"
 
 	"github.com/nanu-c/qml-go"
 )
@@ -21,10 +20,10 @@ func run() error {
 		return err
 	}
 
-	testvar := TestStruct{Message: "Hello World", Number: 1}
+	testvar := TestStruct{Message: ""}
 	context := engine.Context()
 	context.SetVar("testvar", &testvar)
-	testvar.GetMessage()
+	//testvar.GetMessage()
 
 	win := component.CreateWindow(nil)
 	testvar.Root = win.Root()
@@ -41,10 +40,25 @@ type TestStruct struct {
 	Number  int
 }
 
-func (testvar *TestStruct) GetMessage() {
-	//go func() {
-		testvar.Number = testvar.Number + 1
-		testvar.Output = "Counter " + strconv.Itoa(testvar.Number)
-		qml.Changed(testvar, &testvar.Output)
-	//}()
+func (testvar *TestStruct) DoCancel() {
+	testvar.Message = ""
+	testvar.Output = "Reset!"
+	qml.Changed(testvar, &testvar.Message)
+	qml.Changed(testvar, &testvar.Output)
 }
+
+func (testvar *TestStruct) DoNote() {
+	testvar.Message = ""
+	testvar.Output = "Note Sent!"
+	qml.Changed(testvar, &testvar.Message)
+	qml.Changed(testvar, &testvar.Output)
+}
+
+func (testvar *TestStruct) DoTodo() {
+	testvar.Message = ""
+	testvar.Output = "Todo Sent!"
+	qml.Changed(testvar, &testvar.Message)
+	qml.Changed(testvar, &testvar.Output)
+}
+
+

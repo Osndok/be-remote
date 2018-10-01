@@ -5,7 +5,7 @@ import Ubuntu.Components 1.3
 MainView {
     id: root
     objectName: 'mainView'
-    applicationName: 'be-remote.reh'
+    applicationName: 'be_remote.robert'
     automaticOrientation: true
 
     width: units.gu(45)
@@ -34,7 +34,13 @@ MainView {
                 Layout.fillHeight: true
             }
 
-            Label {
+            Label
+            {
+                text: "Message"
+            }
+
+            TextArea
+            {
                 text: testvar.message
                 horizontalAlignment: Label.AlignHCenter
                 Layout.fillWidth: true
@@ -46,17 +52,38 @@ MainView {
                 */
             }
 
-            Label {
+            RowLayout
+            {
+            Layout.alignment: Qt.AlignCenter
+
+            Button
+            {
+                text: 'Cancel'
+                onClicked: testvar.doCancel()
+                //Layout.alignment: Qt.AlignCenter
+            }
+
+            Button
+            {
+                text: 'Note'
+                //color: 'green'
+                onClicked: testvar.doNote()
+            }
+
+            Button
+            {
+                text: 'Todo'
+                color: 'green'
+                onClicked: testvar.doTodo()
+                //Layout.alignment: Qt.AlignCenter
+            }
+            }
+
+            Label
+            {
                 text: testvar.output
                 horizontalAlignment: Label.AlignHCenter
                 Layout.fillWidth: true
-            }
-
-            Button {
-                text: 'Do it!'
-                color: 'green'
-                onClicked: testvar.getMessage()
-                Layout.alignment: Qt.AlignCenter
             }
 
             Item {
@@ -66,3 +93,4 @@ MainView {
         }
     }
 }
+
