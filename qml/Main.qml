@@ -29,11 +29,6 @@ MainView {
                 bottom: parent.bottom
             }
 
-            Item {
-                id: spacer
-                Layout.fillHeight: true
-            }
-
             Label
             {
                 text: "Message"
@@ -41,9 +36,12 @@ MainView {
 
             TextArea
             {
+                id: myTextArea
+                focus: true
                 text: testvar.message
                 horizontalAlignment: Label.AlignHCenter
                 Layout.fillWidth: true
+                Component.onCompleted: myTextArea.forceActiveFocus()
 
                 /*
                     To export go functions they have to be in uppercase but in qml
