@@ -2,9 +2,14 @@ package main
 
 import (
 	"log"
-
+	"fmt"
+	"bytes"
+	"time"
+	"os"
 	"github.com/nanu-c/qml-go"
 )
+
+const path="/home/phablet/Documents/be-remote.txt"
 
 func main() {
 	err := qml.Run(run)
@@ -48,17 +53,47 @@ func (testvar *TestStruct) DoCancel() {
 }
 
 func (testvar *TestStruct) DoNote() {
-	testvar.Message = ""
-	testvar.Output = "Note Sent!"
-	qml.Changed(testvar, &testvar.Message)
-	qml.Changed(testvar, &testvar.Output)
+	if err := writeEntry("note", testvar.Message); err==nil {
+		testvar.Message = ""
+		testvar.Output = "Note Enqueued!"
+		qml.Changed(testvar, &testvar.Message)
+		qml.Changed(testvar, &testvar.Output)
+	} else {
+		log.Fatal(err)
+		testvar.Output = err.Error();
+		qml.Changed(testvar, &testvar.Output)
+	}
 }
 
 func (testvar *TestStruct) DoTodo() {
-	testvar.Message = ""
-	testvar.Output = "Todo Sent!"
-	qml.Changed(testvar, &testvar.Message)
-	qml.Changed(testvar, &testvar.Output)
+	if err := writeEntry("todo", testvar.Message); err==nil {
+		testvar.Message = ""
+		testvar.Output = "Todo Enqueued!"
+		qml.Changed(testvar, &testvar.Message)
+		qml.Changed(testvar, &testvar.Output)
+	} else {
+		log.Fatal(err)
+		testvar.Output = err.Error();
+		qml.Changed(testvar, &testvar.Output)
+	}
 }
 
+func writeEntry(key string, message string) error {
+	var buf bytes.Buffer;
+	fmt.Fprintf(&buf, "%x\t%s\t%s\n", time.Now().Unix(), "alpha", "beta");
+	//ioutil.WriteFile(path, buf.Bytes(), os.ModeAppend|0777);
+
+	//https://godoc.org/os#example-OpenFile--Append
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err;
+	}
+	if _, err := f.Write(buf.Bytes()); err != nil {
+		return err;
+	}
+	if err := f.Close(); err != nil {
+		return err;
+	}
+	return nil;
+}
 
