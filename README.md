@@ -1,3 +1,3 @@
 # BE Remote
 
-Remotely effect black-ember
+personal experiment w/ ubports development; writes a message to a file
