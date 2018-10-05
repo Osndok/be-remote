@@ -57,22 +57,34 @@ MainView {
             Button
             {
                 text: 'Cancel'
-                onClicked: testvar.doCancel()
-                //Layout.alignment: Qt.AlignCenter
+                onClicked:
+                {
+                    testvar.doCancel()
+                    myTextArea.text=""
+                    myTextArea.forceActiveFocus()
+                }
             }
 
             Button
             {
                 text: 'Note'
                 //color: 'green'
-                onClicked: testvar.doNote()
+                onClicked:
+                {
+                    testvar.doNote(myTextArea.text)
+                    myTextArea.forceActiveFocus()
+                }
             }
 
             Button
             {
                 text: 'Todo'
                 color: 'green'
-                onClicked: testvar.doTodo()
+                onClicked:
+                {
+                    testvar.doTodo(myTextArea.text)
+                    myTextArea.forceActiveFocus()
+                }
                 //Layout.alignment: Qt.AlignCenter
             }
             }

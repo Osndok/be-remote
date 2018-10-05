@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"time"
 	"os"
+	"strings"
 	"github.com/nanu-c/qml-go"
 )
 
@@ -52,35 +53,31 @@ func (testvar *TestStruct) DoCancel() {
 	qml.Changed(testvar, &testvar.Output)
 }
 
-func (testvar *TestStruct) DoNote() {
-	if err := writeEntry("note", testvar.Message); err==nil {
+func (testvar *TestStruct) DoNote(raw string) {
+	testvar.ProcessRawEntry(raw, "note", "Note Enqueued!")
+}
+
+func (testvar *TestStruct) DoTodo(raw string) {
+	testvar.ProcessRawEntry(raw, "todo", "Todo Enqueued!")
+}
+
+func (testvar *TestStruct) ProcessRawEntry(raw string, key string, happyMessage string) {
+	//DNW: message := testvar.Message
+	if err := writeEntry(key, raw); err==nil {
+		//BUG: this only seems to clear the message the first time!?!
 		testvar.Message = ""
-		testvar.Output = "Note Enqueued!"
+		testvar.Output = happyMessage
 		qml.Changed(testvar, &testvar.Message)
 		qml.Changed(testvar, &testvar.Output)
 	} else {
-		log.Fatal(err)
+		//dies: log.Fatal(err)
 		testvar.Output = err.Error();
 		qml.Changed(testvar, &testvar.Output)
 	}
 }
 
-func (testvar *TestStruct) DoTodo() {
-	if err := writeEntry("todo", testvar.Message); err==nil {
-		testvar.Message = ""
-		testvar.Output = "Todo Enqueued!"
-		qml.Changed(testvar, &testvar.Message)
-		qml.Changed(testvar, &testvar.Output)
-	} else {
-		log.Fatal(err)
-		testvar.Output = err.Error();
-		qml.Changed(testvar, &testvar.Output)
-	}
-}
-
-func writeEntry(key string, message string) error {
+func writeEntry(key string, raw string) error {
 	var buf bytes.Buffer;
-	fmt.Fprintf(&buf, "%x\t%s\t%s\n", time.Now().Unix(), "alpha", "beta");
 	//ioutil.WriteFile(path, buf.Bytes(), os.ModeAppend|0777);
 
 	//https://godoc.org/os#example-OpenFile--Append
@@ -88,6 +85,16 @@ func writeEntry(key string, message string) error {
 	if err != nil {
 		return err;
 	}
+
+	bits:=strings.Split(raw, "\n")
+	
+	for _, message := range bits {
+		log.Printf("%s: %s\n", key, message);
+		if len(message) > 0 {
+			fmt.Fprintf(&buf, "%x\t%s\t%s\n", time.Now().Unix(), key, message);
+		}
+	}
+
 	if _, err := f.Write(buf.Bytes()); err != nil {
 		return err;
 	}
